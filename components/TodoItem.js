@@ -60,7 +60,7 @@ const TodoItem = ({ item }) => {
                                 defaultValue={updatePayload.title}
                             />
                             <Pressable style={styles.modalInputButton} onPress={() =>{ 
-                                    editList(updatePayload.id, updateText)
+                                    editList(updatePayload.id, updateText === '' ? updatePayload.title : updateText)
                                     setModal(false)
                                     
                                 }}>
