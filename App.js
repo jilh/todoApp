@@ -40,7 +40,7 @@ const App = () => {
     if(text === ''){
       alert("You cannot add empty text")
     }else{
-      setTodoList([...todoList, {id: todoList.length, userId: 1, title: text, completed: false}])
+      setTodoList([...todoList, {id: todoList.length+1, userId: 1, title: text, completed: false}])
     }
   }
 
