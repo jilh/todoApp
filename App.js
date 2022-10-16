@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import {SafeAreaView, FlatList, StyleSheet, ToastAndroid} from 'react-native'
+import {SafeAreaView, View, FlatList, StyleSheet, ToastAndroid, ActivityIndicator} from 'react-native'
 import TodoItem from './components/TodoItem';
 import TodoListHeader from './components/TodoListHeader';
 import TodoContext from './context/TodoContext';
 const App = () => {
 
   const [todoList, setTodoList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getListItem();
@@ -29,12 +30,14 @@ const App = () => {
       const savedList = await AsyncStorage.getItem('todolist');
       if(savedList != null && JSON.parse(savedList).length != 0){
         setTodoList(JSON.parse(savedList));
+        setLoading(false);
       }else{
         fetch('http://jsonplaceholder.typicode.com/todos')
         .then((response) => response.json())
         .then((json) => {
           if( json.length > 5 ) {json.length = 5}
           setTodoList(json);
+          setLoading(false);
         })
         .catch((error) => console.error(error))
       }
@@ -86,6 +89,7 @@ const App = () => {
             stickyHeaderIndices={[0]}
           />
         </SafeAreaView>
+        { loading && <View style={styles.loadingScreen}><ActivityIndicator size={"large"} color="#DD4AA4" /></View> }
       </TodoContext.Provider>
   )
 }
@@ -97,6 +101,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
   },
+  loadingScreen: {
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#364150',
+    width: '100%',
+    height: '100%',
+    opacity: 0.5,
+  }
 })
 
 export default App;
