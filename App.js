@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import {SafeAreaView, View, FlatList, StyleSheet, ToastAndroid, ActivityIndicator} from 'react-native'
+import {SafeAreaView, View, FlatList, StyleSheet, ToastAndroid, ActivityIndicator, Pressable, Text} from 'react-native'
 import TodoItem from './components/TodoItem';
 import TodoListHeader from './components/TodoListHeader';
 import TodoContext from './context/TodoContext';
@@ -87,9 +87,17 @@ const App = () => {
             ListHeaderComponent={TodoListHeader}
             showsVerticalScrollIndicator={false}
             stickyHeaderIndices={[0]}
+            ListEmptyComponent={<Text style={styles.emptyList}>You don't have any todo item yet</Text>}
           />
         </SafeAreaView>
-        { loading && <View style={styles.loadingScreen}><ActivityIndicator size={"large"} color="#DD4AA4" /></View> }
+        { loading && 
+          <View style={styles.loadingScreen}>
+            <ActivityIndicator size={"large"} color="#DD4AA4" />
+            <Text style={styles.infoText}>Getting local or remote tasks...</Text>
+            <Pressable style={styles.button} onPress={() => setLoading(false)}>
+              <Text style={styles.buttonText}>Skip</Text>
+            </Pressable>
+          </View> }
       </TodoContext.Provider>
   )
 }
@@ -106,10 +114,23 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#364150',
+    backgroundColor: '#00000099',
     width: '100%',
     height: '100%',
-    opacity: 0.5,
+  },
+  infoText: {
+    color: '#fff',
+  },
+  button: {
+    padding: 12,
+    backgroundColor: '#DD4AA4',
+    marginTop: 12,
+  },
+  buttonText: {
+    color: '#fff',
+  },
+  emptyList: {
+    color: '#fff',
   }
 })
 
