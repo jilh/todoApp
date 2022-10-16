@@ -27,9 +27,16 @@ const App = () => {
   const getListItem = async () => {
     try{
       const savedList = await AsyncStorage.getItem('todolist');
-      console.log(JSON.parse(savedList))
-      if(savedList !== null){
+      if(savedList != null && JSON.parse(savedList).length != 0){
         setTodoList(JSON.parse(savedList));
+      }else{
+        fetch('http://jsonplaceholder.typicode.com/todos')
+        .then((response) => response.json())
+        .then((json) => {
+          if( json.length > 5 ) {json.length = 5}
+          setTodoList(json);
+        })
+        .catch((error) => console.error(error))
       }
     }catch{
       console.log("Unable to retrived saved list")
