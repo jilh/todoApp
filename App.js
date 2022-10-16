@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import {SafeAreaView, FlatList, StyleSheet} from 'react-native'
+import {SafeAreaView, FlatList, StyleSheet, ToastAndroid} from 'react-native'
 import TodoItem from './components/TodoItem';
 import TodoListHeader from './components/TodoListHeader';
 import TodoContext from './context/TodoContext';
@@ -38,9 +38,17 @@ const App = () => {
   
   const addItem = (text) => {
     if(text === ''){
-      alert("You cannot add empty text")
+      // alert("You cannot add empty text")
+      ToastAndroid.showWithGravity(
+        "You cannot add empty text",
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM
+        );
     }else{
-      setTodoList([...todoList, {id: todoList.length+1, userId: 1, title: text, completed: false}])
+      let lastElementInList = todoList.slice(-1);
+      
+      let uniqueID = lastElementInList.length === 0 ? 0 : lastElementInList[0].id + 1;
+      setTodoList([...todoList, {id: uniqueID, userId: 1, title: text, completed: false}])
     }
   }
 
